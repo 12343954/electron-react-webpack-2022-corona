@@ -44,7 +44,7 @@ export default class mqtt_client extends Component {
         // client.end();
         let list = this.state.messages;
 
-        list.push({ topic, msg: message.toString(), time: new Date().toLocaleTimeString() })
+        list.splice(0, 0, { topic, msg: message.toString(), time: new Date().toLocaleTimeString() })
         this.setState({ messages: list });
 
       })
@@ -94,7 +94,7 @@ export default class mqtt_client extends Component {
                         <div className="preview-item-content d-sm-flex flex-grow">
                           <div className="flex-grow">
                             <h6 className="preview-subject">{k.msg}</h6>
-                            <p className="text-muted mb-0">topic:{k.topic}</p>
+                            <p className="text-muted mb-0">topic: {k.topic}</p>
                           </div>
                           <div className="mr-auto text-sm-right pt-2 pt-sm-0">
                             <p className="text-muted">{k.time}</p>

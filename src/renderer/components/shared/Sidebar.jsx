@@ -133,13 +133,13 @@ class Sidebar extends Component {
               <span className="menu-icon">
                 <i className="mdi mdi-cube-outline"></i>
               </span>
-              <span className="menu-title"><Trans>Unity 3D</Trans></span>
+              <span className="menu-title"><Trans>MQTT</Trans></span>
               <i className="menu-arrow"></i>
             </div>
             <Collapse in={this.state.u3dMenuOpen}>
               <div>
                 <ul className="nav flex-column sub-menu">
-                  <li className="nav-item"> <Link className={this.isPathActive('/u3d/room') ? 'nav-link active' : 'nav-link'} to="/u3d/room"><Trans>3D Room</Trans></Link></li>
+                  <li className="nav-item"> <Link className={this.isPathActive('/u3d/room') ? 'nav-link active' : 'nav-link'} to="/u3d/room"><Trans>Client - mqtt.js</Trans></Link></li>
                 </ul>
               </div>
             </Collapse>
