@@ -22,13 +22,14 @@ const options = {
 export default class mqtt_client extends Component {
   constructor(props) {
     super(props);
-    this.state = { messages: [], myVal: 1 }
+    this.state = { messages: [], myVal: 0 }
   }
 
   componentDidMount() {
     client = mqtt.connect(host, options);
     if (client) {
       client.on('connect', () => {
+        this.addMsg('', `${options.clientId} connected mqtt broker!`, 'system');
         client.subscribe('presence', (err) => {
           if (!err) {
             client.publish('presence', 'Hello mqtt')
@@ -38,29 +39,35 @@ export default class mqtt_client extends Component {
       })
 
       client.on('message', (topic, message) => {
-        console.log(`topic : ${topic}\nmsg   : ${message.toString()}`);
-        this.setState({ myVal: this.state.myVal + 1 })
         // message is Buffer
         // client.end();
-        let list = this.state.messages;
-
-        list.splice(0, 0, { topic, msg: message.toString(), time: new Date().toLocaleTimeString() })
-        this.setState({ messages: list });
-
+        console.log(`topic : ${topic}\nmsg   : ${message.toString()}`);
+        this.addMsg(topic, message.toString(), 'normal');
       })
 
       client.on("error", (err) => {
         console.log("Connection error: ", err);
+        this.addMsg('', `mqtt error：${err}`, 'error');
         client.end();
       });
 
       client.on("reconnect", () => {
         console.log("Reconnecting...");
+        this.addMsg('', "Reconnecting...", 'system')
       });
 
     } else {
       console.log(`mqtt init failed!`)
     }
+  }
+
+  addMsg = (topic, msg, type) => {
+    this.setState({ myVal: this.state.myVal + 1 })
+
+    let list = this.state.messages;
+
+    list.splice(0, 0, { topic, msg, type, time: new Date().toLocaleTimeString() })
+    this.setState({ messages: list });
   }
 
   componentWillUnmount() {
@@ -87,14 +94,18 @@ export default class mqtt_client extends Component {
                     return (
                       <div key={i} className={i == this.state.messages?.length - 1 ? "preview-item" : "preview-item border-bottom"}>
                         <div className="preview-thumbnail">
-                          <div className="preview-icon bg-primary">
-                            <i className="mdi mdi-file-document"></i>
-                          </div>
+                          {k.type == 'normal' ? <div className="preview-icon bg-primary"><i className="mdi mdi-file-document"></i></div> : null}
+                          {k.type == 'error' ? <div className="preview-icon bg-warning">
+                            <i className="mdi mdi-chart-pie"></i>
+                          </div> : null}
+                          {k.type == 'system' ? <div className="preview-icon bg-success">
+                            <i className="mdi mdi-cloud-download"></i>
+                          </div> : null}
                         </div>
                         <div className="preview-item-content d-sm-flex flex-grow">
                           <div className="flex-grow">
                             <h6 className="preview-subject">{k.msg}</h6>
-                            <p className="text-muted mb-0">topic: {k.topic}</p>
+                            <p className="text-muted mb-0">{k.topic ? `topic: ${k.topic}` : null}</p>
                           </div>
                           <div className="mr-auto text-sm-right pt-2 pt-sm-0">
                             <p className="text-muted">{k.time}</p>
