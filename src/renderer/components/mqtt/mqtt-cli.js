@@ -74,13 +74,41 @@ export default class mqtt_client extends Component {
   render() {
     return (
       <div>
-        <h1>{this.state.myVal}</h1>
-        {this.state.list?.map((k, i) => {
-          return (<div key={i}>
-            <p>topic:{k.topic} time={k.time}</p>
-            <p>{k.msg}</p>
-          </div>)
-        })}
+        <div className="card">
+          <div className="card-body">
+            <div className="d-flex flex-row justify-content-between">
+              <h4 className="card-title mb-1">MQTT total: {this.state.myVal}</h4>
+              <p className="text-muted mb-1">Message status</p>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <div className="preview-list">
+                  {this.state.messages?.map((k, i) => {
+                    return (
+                      <div key={i} className={i == this.state.messages?.length - 1 ? "preview-item" : "preview-item border-bottom"}>
+                        <div className="preview-thumbnail">
+                          <div className="preview-icon bg-primary">
+                            <i className="mdi mdi-file-document"></i>
+                          </div>
+                        </div>
+                        <div className="preview-item-content d-sm-flex flex-grow">
+                          <div className="flex-grow">
+                            <h6 className="preview-subject">{k.msg}</h6>
+                            <p className="text-muted mb-0">topic:{k.topic}</p>
+                          </div>
+                          <div className="mr-auto text-sm-right pt-2 pt-sm-0">
+                            <p className="text-muted">{k.time}</p>
+                            <p className="text-muted mb-0"></p>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
